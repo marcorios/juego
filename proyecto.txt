@@ -1,0 +1,71 @@
+#include "LedControl.h"
+
+LedControl lc=LedControl(12,11,10,1);
+
+unsigned long delaytime=1000;
+
+
+
+void setup() {
+lc.shutdown(0,false);
+int pinint=8;
+  /* Set the brightness to a medium values */
+  lc.setIntensity(0,8);
+  /* and clear the display */
+  lc.clearDisplay(0);
+attachInterrupt(pinint,moverBarra,CHANGE);
+}
+
+
+void loop() {
+//lc.setLed(0,0,0,true);
+//lc.setLed(0,0,1,true);
+//lc.setLed(0,0,2,true);
+//delay(delaytime);
+//lc.setLed(0,0,0,false);
+//lc.setLed(0,0,1,false);
+//lc.setLed(0,0,2,false);
+//delay(delaytime);
+}
+
+void moverBarra(){
+ int sens1=5, sens2=6, sens3=7;
+ pinMode(sens1,INPUT);
+ pinMode(sens2,INPUT);
+ pinMode(sens3,INPUT);
+int sens1st=digitalRead(sens1);
+int sens2st=digitalRead(sens2);
+int sens3st=digitalRead(sens3);
+
+if (sens3st==HIGH){
+lc.setLed(0,0,5,true);
+lc.setLed(0,0,6,true);
+lc.setLed(0,0,7,true);
+delayMicroseconds(1000000);
+lc.setLed(0,0,5,false);
+lc.setLed(0,0,6,false);
+lc.setLed(0,0,7,false);
+delayMicroseconds(1000000);
+}
+
+if(sens2st==HIGH){
+lc.setLed(0,0,5,true);
+lc.setLed(0,0,4,true);
+lc.setLed(0,0,3,true);
+delayMicroseconds(1000000);
+lc.setLed(0,0,5,false);
+lc.setLed(0,0,4,false);
+lc.setLed(0,0,3,false);
+delayMicroseconds(1000000);
+}
+if(sens1st==HIGH){
+lc.setLed(0,0,0,true);
+lc.setLed(0,0,1,true);
+lc.setLed(0,0,2,true);
+delayMicroseconds(1000000);
+lc.setLed(0,0,0,false);
+lc.setLed(0,0,1,false);
+lc.setLed(0,0,2,false);
+delayMicroseconds(1000000);
+}
+}
