@@ -1,0 +1,117 @@
+#include "LedControl.h"
+LedControl lc=LedControl(22,24,26,2);
+
+unsigned long delaytime=150;
+ int a=0;
+
+void setup() {
+  Serial.begin(9600);
+  /*
+   The MAX72XX is in power-saving mode on startup,
+   we have to do a wakeup call
+   */
+  lc.shutdown(0,false);
+  /* Set the brightness to a medium values */
+  lc.setIntensity(0,8);
+  /* and clear the display */
+  lc.clearDisplay(0);
+  
+  lc.shutdown(1,false);
+  /* Set the brightness to a medium values */
+  lc.setIntensity(1,8);
+  /* and clear the display */
+  lc.clearDisplay(1);
+//  attachInterrupt(digitalPinToInterrupt(18),sens1,LOW);
+//  attachInterrupt(digitalPinToInterrupt(19),sens2,LOW);
+//  attachInterrupt(digitalPinToInterrupt(20),sens3,LOW);
+//  attachInterrupt(digitalPinToInterrupt(21),sens4,LOW);
+
+}
+
+void loop() {
+ escribirMatriz();
+  delay(100);
+  }
+
+volatile int col=1,fil=1,contfil=0,contcol=0;
+  
+void escribirMatriz(void){
+  while(1){
+    
+//Bola
+contfil++;
+contcol++;
+col++;
+
+if(contcol%8==0){
+  col-=8;
+}
+
+if(contfil==27){
+  contfil=0;
+}
+if(contfil<14)
+{
+    road1();
+}
+
+if(contfil>13)
+{
+    road2();
+}
+  }
+}
+    
+    
+ void road1(void){
+    if(fil<8){
+     lc.setRow(0,fil,(1<<col));
+     delay(delaytime);
+     lc.setRow(0,fil,(byte)0);
+    }
+    
+    if(fil>=8){
+     lc.setRow(1,fil-8,(128>>col));
+     delay(delaytime);
+     lc.setRow(1,fil-8,(byte)0);
+    }
+    fil++;
+  }
+
+ void road2(void){
+    if(fil<8){
+     lc.setRow(0,fil,(1<<col));
+     delay(delaytime);
+     lc.setRow(0,fil,(byte)0);
+    }
+    
+    if(fil>=8){
+     lc.setRow(1,fil-8,(128>>col));
+     delay(delaytime);
+     lc.setRow(1,fil-8,(byte)0);
+    }
+    fil--;
+  }
+  
+      // Barras
+  void sens1(void){
+lc.setRow(0,0,B11100000);
+delay(delaytime);
+  }
+    void sens2(void){
+lc.setRow(0,0,B00111000);
+delay(delaytime);
+  }
+    void sens3(void){
+lc.setRow(0,0,B00011100);
+delay(delaytime);
+  }
+    void sens4(void){
+lc.setRow(0,0,B00000111);
+delay(delaytime);
+  }
+
+
+
+  
+
