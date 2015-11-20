@@ -1,0 +1,500 @@
+#include "LedControl.h"
+LedControl lc=LedControl(22,23,24,2);
+unsigned long delaytime=80;
+
+const int a1 = 35;
+const int b1 = 36;
+const int c1 = 37;
+const int d1 = 38;
+const int e1 = 39;
+const int f1 = 40;
+const int g1 = 41;
+
+const int a2 = 42;
+const int b2 = 43;
+const int c2 = 44;
+const int d2 = 45;
+const int e2 = 46;
+const int f2 = 47;
+const int g2 = 48;
+
+volatile  int a=0,b=0,auxfil=0,auxcol=0,contfil=0,marc1=0,marc2=0,cont=0;
+volatile  int vectcol[28]={0,1,2,3,4,5,6,7,6,5,4,3,2,1,0,1,2,3,4,5,6,7,5,4,3,2,1,0};
+volatile  int vectfil[28]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,13,12,11,10,9,8,7,6,5,5,4,3,2,1};
+volatile  int vectcol3[23]={0,1,2,3,4,5,6,7,6,4,2,0,2,4,6,7,6,5,4,3,2,1,0};
+volatile  int vectfil3[23]={1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,13,12,10,8,6,4,2,1};
+volatile  int vectcol4[27]={0,2,4,6,7,6,5,4,3,2,1,0,1,2,4,5,6,7,5,3,2,1,0,1,2,3,4};
+volatile  int vectfil4[27]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,13,12,11,10,9,8,7,6,5,4,3,2,1};
+volatile  int vectcol5[59]={4,5,6,7,6,5,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,1,0,1,2,3,4,5,6,7,6,5,4,3,2,1,0,1,2,3,4,5,6,7,5};
+volatile  int vectfil5[59]={1,3,5,7,9,11,13,14,13,12,11,10,9,8,7,6,5,4,3,2,1,2,3,4,5,6,7,8,9,10,11,12,13,14,13,12,11,10,9,8,7,6,5,4,3,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+volatile  int vectcol6[23]={3,1,0,2,4,6,7,5,3,1,0,2,3,5,7,6,5,4,3,2,1,0,1};
+volatile  int vectfil6[23]={13,12,11,10,9,8,8,7,6,5,4,3,3,2,1,3,5,7,9,11,12,13,14};
+volatile  int vectcol7[47]={1,2,3,4,5,6,7,6,5,3,2,1,0,2,3,4,6,7,6,5,4,3,2,1,0,1,2,3,4,5,6,5,4,3,2,1};
+volatile  int vectfil7[47]={14,13,12,11,10,9,8,6,4,2,1,2,3,6,8,10,13,14,13,12,11,10,9,8,7,6,5,4,3,2,1,6,11,14,9,5};
+
+void setup() {
+  Serial.begin(9600);
+  /*
+   The MAX72XX is in power-saving mode on startup,
+   we have to do a wakeup call
+   */
+  lc.shutdown(0,false);    
+  /* Set the brightness to a medium values */
+  lc.setIntensity(0,8);
+  /* and clear the display */
+  lc.clearDisplay(0);
+  
+  lc.shutdown(1,false);
+  /* Set the brightness to a medium values */
+  lc.setIntensity(1,8);
+  /* and clear the display */
+  lc.clearDisplay(1);
+  
+  //sensores
+  pinMode(25, INPUT);
+  pinMode(26, INPUT);
+  pinMode(27, INPUT);
+  pinMode(28, INPUT);
+  pinMode(29, INPUT);
+  pinMode(30, INPUT);
+  pinMode(31, INPUT);
+  pinMode(32, INPUT);
+  pinMode(33, INPUT);
+  pinMode(34, INPUT);
+  
+  //BCDs
+  pinMode(a1, OUTPUT);
+  pinMode(b1, OUTPUT);
+  pinMode(c1, OUTPUT);
+  pinMode(d1, OUTPUT);
+  pinMode(e1, OUTPUT);
+  pinMode(f1, OUTPUT);
+  pinMode(g1, OUTPUT);
+  
+  pinMode(a2, OUTPUT);
+  pinMode(b2, OUTPUT);
+  pinMode(c2, OUTPUT);
+  pinMode(d2, OUTPUT);
+  pinMode(e2, OUTPUT);
+  pinMode(f2, OUTPUT);
+  pinMode(g2, OUTPUT);
+  
+  //Interrupciones
+  attachInterrupt(digitalPinToInterrupt(20),player1,FALLING);
+  attachInterrupt(digitalPinToInterrupt(21),player2,FALLING);
+}
+
+void loop() {
+ escribirMatriz();
+  }
+
+  
+void escribirMatriz(void){
+    
+// Barras
+if(a==1){
+  lc.setRow(0,0,0);
+  lc.setRow(0,0,B11100000);
+}
+if(a==2){
+  lc.setRow(0,0,0);
+  lc.setRow(0,0,B01110000);
+}
+if(a==3){
+  lc.setRow(0,0,0);
+  lc.setRow(0,0,B00111000);
+}
+if(a==4){
+  lc.setRow(0,0,0);
+  lc.setRow(0,0,B00001110);
+}
+if(a==5){
+  lc.setRow(0,0,0);
+  lc.setRow(0,0,B00000111);
+}
+
+if(b==1){
+  lc.setRow(1,7,0);
+  lc.setRow(1,7,B11100000);
+}
+if(b==2){
+  lc.setRow(1,7,0);
+  lc.setRow(1,7,B01110000);
+}
+if(b==3){
+  lc.setRow(1,7,0);
+  lc.setRow(1,7,B00111000);
+}
+if(b==4){
+  lc.setRow(1,7,0);
+  lc.setRow(1,7,B00001110);
+}
+if(b==5){
+  lc.setRow(1,7,0);
+  lc.setRow(1,7,B00000111);
+}
+
+    
+//Bola
+contfil++;
+
+if(contfil<28)
+{
+    road1();
+}
+
+if((contfil>27)&&(contfil<51))
+{
+  if(contfil==28) cont=0;
+    road3();
+}
+
+if((contfil>50)&&(contfil<78))
+{
+  if(contfil==51) cont=0;
+    road4();
+} 
+
+if((contfil>77)&&(contfil<137))
+{
+  if(contfil==78) cont=0;
+    road5();
+}
+
+if((contfil>136)&&(contfil<159))
+{
+  if(contfil==137) cont=0;
+    road6();
+}
+
+if((contfil>158)&&(contfil<206))
+{
+  if(contfil==159) cont=0;
+    road7();
+}
+
+if(contfil>=205) {
+  contfil=0;
+  cont=0;
+}
+
+//Marcadores
+//revisa si hay gol
+//player1
+if((auxfil==1)&&(auxcol==2)&&((a==1)||(a==2)||(a==3))){
+  marc1++;
+}
+if((auxfil==1)&&(auxcol==3)&&((a==1)||(a==2)||(a==5))){
+  marc1++;
+}
+if((auxfil==1)&&(auxcol==4)&&((a==1)||(a==4)||(a==5))){
+  marc1++;
+}
+if((auxfil==1)&&(auxcol==5)&&((a==4)||(a==5))){
+  marc1++;
+}
+
+//muestra el marcador
+if(marc1==0){
+  cero1();
+}
+if(marc1==1){
+  uno1();
+}
+if(marc1==2){
+  dos1();
+}
+if(marc1==3){
+  tres1();
+}
+if(marc1==4){
+  cuatro1();
+}
+if(marc1==5){
+  cinco1();
+}
+
+
+//player2
+//revisa si hay gol
+if((auxfil==14)&&(auxcol==2)&&((b==1)||(b==2)||(b==3))){
+  marc2++;
+}
+if((auxfil==14)&&(auxcol==3)&&((b==1)||(b==2)||(b==5))){
+  marc2++;
+}
+if((auxfil==14)&&(auxcol==4)&&((b==1)||(b==4)||(b==5))){
+  marc2++;
+}
+if((auxfil==14)&&(auxcol==5)&&((b==4)||(b==5))){
+  marc2++;
+}
+
+//muestra el marcador
+if(marc2==0){
+  cero2();
+}
+if(marc2==1){
+  uno2();
+}
+if(marc2==2){
+  dos2();
+}
+if(marc2==3){
+  tres2();
+}
+if(marc2==4){
+  cuatro2();
+}
+if(marc2==5){
+  cinco2();
+}
+
+}
+    
+    
+ void road1(void){
+   auxfil=vectfil[cont];
+   auxcol=vectcol[cont];
+       if(vectfil[cont]<8){
+     lc.setRow(0,vectfil[cont],(1<<vectcol[cont]));
+     delay(delaytime);
+     lc.setRow(0,vectfil[cont],(byte)0);
+    }
+         if(vectfil[cont]>7){
+     lc.setRow(1,vectfil[cont]-8,(1<<vectcol[cont]));
+     delay(delaytime);
+     lc.setRow(1,vectfil[cont]-8,(byte)0); 
+  }
+  cont++;  
+  }
+   
+  
+  void road3(void){
+   auxfil=vectfil3[cont];
+   auxcol=vectcol3[cont];
+    if(vectfil3[cont]<8){
+     lc.setRow(0,vectfil3[cont],(1<<vectcol3[cont]));
+     delay(delaytime);
+     lc.setRow(0,vectfil3[cont],(byte)0);
+    }
+         if(vectfil3[cont]>7){
+     lc.setRow(1,vectfil3[cont]-8,(1<<vectcol3[cont]));
+     delay(delaytime);
+     lc.setRow(1,vectfil3[cont]-8,(byte)0); 
+  }
+  cont++;  
+  }
+  
+  void road4(void){
+   auxfil=vectfil4[cont];
+   auxcol=vectcol4[cont];
+    if(vectfil4[cont]<8){
+     lc.setRow(0,vectfil4[cont],(1<<vectcol4[cont]));
+     delay(delaytime);
+     lc.setRow(0,vectfil4[cont],(byte)0);
+    }
+         if(vectfil4[cont]>7){
+     lc.setRow(1,vectfil4[cont]-8,(1<<vectcol4[cont]));
+     delay(delaytime);
+     lc.setRow(1,vectfil4[cont]-8,(byte)0); 
+  }
+  cont++;  
+  }
+  
+    void road5(void){
+     auxfil=vectfil5[cont];
+   auxcol=vectcol5[cont];
+    if(vectfil5[cont]<8){
+     lc.setRow(0,vectfil5[cont],(1<<vectcol5[cont]));
+     delay(delaytime);
+     lc.setRow(0,vectfil5[cont],(byte)0);
+    }
+         if(vectfil5[cont]>7){
+     lc.setRow(1,vectfil5[cont]-8,(1<<vectcol5[cont]));
+     delay(delaytime);
+     lc.setRow(1,vectfil5[cont]-8,(byte)0); 
+  }
+  cont++;  
+  }
+  
+      void road6(void){
+     auxfil=vectfil6[cont];
+   auxcol=vectcol6[cont];
+    if(vectfil6[cont]<8){
+     lc.setRow(0,vectfil6[cont],(1<<vectcol6[cont]));
+     delay(delaytime);
+     lc.setRow(0,vectfil6[cont],(byte)0);
+    }
+         if(vectfil6[cont]>7){
+     lc.setRow(1,vectfil6[cont]-8,(1<<vectcol6[cont]));
+     delay(delaytime);
+     lc.setRow(1,vectfil6[cont]-8,(byte)0); 
+  }
+  cont++;  
+  }
+  
+       void road7(void){
+     auxfil=vectfil7[cont];
+   auxcol=vectcol7[cont];
+    if(vectfil7[cont]<8){
+     lc.setRow(0,vectfil7[cont],(1<<vectcol7[cont]));
+     delay(delaytime);
+     lc.setRow(0,vectfil7[cont],(byte)0);
+    }
+         if(vectfil7[cont]>7){
+     lc.setRow(1,vectfil7[cont]-8,(1<<vectcol7[cont]));
+     delay(delaytime);
+     lc.setRow(1,vectfil7[cont]-8,(byte)0); 
+  }
+  cont++;  
+  }
+  
+ 
+    
+      // Barras_Interrupcion
+  void player1(void){
+    if(digitalRead(25)==LOW) b=1;
+    if(digitalRead(26)==LOW) b=2;
+    if(digitalRead(27)==LOW) b=3;
+    if(digitalRead(28)==LOW) b=4;
+    if(digitalRead(29)==LOW) b=5;
+  }
+  
+    void player2(void){
+    if(digitalRead(30)==LOW) a=5;
+    if(digitalRead(31)==LOW) a=4;
+    if(digitalRead(32)==LOW) a=3;
+    if(digitalRead(33)==LOW) a=2;
+    if(digitalRead(34)==LOW) a=1;
+  }
+  
+  //Para mostrar los marcadores en los BCDs
+  //player1
+  void cero1(void){
+  digitalWrite(a1, LOW);
+  digitalWrite(b1, LOW);
+  digitalWrite(c1, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(e1, LOW);
+  digitalWrite(f1, LOW);
+  digitalWrite(g1, HIGH);
+  }
+  
+  void uno1(void){
+  digitalWrite(a1, HIGH);
+  digitalWrite(b1, LOW);
+  digitalWrite(c1, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(e1, HIGH);
+  digitalWrite(f1, HIGH);
+  digitalWrite(g1, HIGH);
+  }
+  
+  void dos1(void){
+  digitalWrite(a1, LOW);
+  digitalWrite(b1, LOW);
+  digitalWrite(c1, HIGH);
+  digitalWrite(d1, LOW);
+  digitalWrite(e1, LOW);
+  digitalWrite(f1, HIGH);
+  digitalWrite(g1, LOW);
+  }
+  
+  void tres1(void){
+  digitalWrite(a1, LOW);
+  digitalWrite(b1, LOW);
+  digitalWrite(c1, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(e1, HIGH);
+  digitalWrite(f1, HIGH);
+  digitalWrite(g1, LOW);
+  }
+  
+  void cuatro1(void){
+  digitalWrite(a1, HIGH);
+  digitalWrite(b1, LOW);
+  digitalWrite(c1, LOW);
+  digitalWrite(d1, HIGH);
+  digitalWrite(e1, HIGH);
+  digitalWrite(f1, LOW);
+  digitalWrite(g1, LOW);
+  }
+  
+  void cinco1(void){
+  digitalWrite(a1, LOW);
+  digitalWrite(b1, HIGH);
+  digitalWrite(c1, LOW);
+  digitalWrite(d1, LOW);
+  digitalWrite(e1, HIGH);
+  digitalWrite(f1, LOW);
+  digitalWrite(g1, LOW);
+  }
+  
+  //player2
+  void cero2(void){
+  digitalWrite(a2, LOW);
+  digitalWrite(b2, LOW);
+  digitalWrite(c2, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(e2, LOW);
+  digitalWrite(f2, LOW);
+  digitalWrite(g2, HIGH);
+  }
+  
+    void uno2(void){
+  digitalWrite(a2, HIGH);
+  digitalWrite(b2, LOW);
+  digitalWrite(c2, LOW);
+  digitalWrite(d2, HIGH);
+  digitalWrite(e2, HIGH);
+  digitalWrite(f2, HIGH);
+  digitalWrite(g2, HIGH);
+  }
+  
+  void dos2(void){
+  digitalWrite(a2, LOW);
+  digitalWrite(b2, LOW);
+  digitalWrite(c2, HIGH);
+  digitalWrite(d2, LOW);
+  digitalWrite(e2, LOW);
+  digitalWrite(f2, HIGH);
+  digitalWrite(g2, LOW);
+  }
+  
+  void tres2(void){
+  digitalWrite(a2, LOW);
+  digitalWrite(b2, LOW);
+  digitalWrite(c2, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(e2, HIGH);
+  digitalWrite(f2, HIGH);
+  digitalWrite(g2, LOW);
+  }
+  
+  void cuatro2(void){
+  digitalWrite(a2, HIGH);
+  digitalWrite(b2, LOW);
+  digitalWrite(c2, LOW);
+  digitalWrite(d2, HIGH);
+  digitalWrite(e2, HIGH);
+  digitalWrite(f2, LOW);
+  digitalWrite(g2, LOW);
+  }
+  
+  void cinco2(void){
+  digitalWrite(a2, LOW);
+  digitalWrite(b2, HIGH);
+  digitalWrite(c2, LOW);
+  digitalWrite(d2, LOW);
+  digitalWrite(e2, HIGH);
+  digitalWrite(f2, LOW);
+  digitalWrite(g2, LOW);
+  }
+  
+  
+
+
+
+  
+
